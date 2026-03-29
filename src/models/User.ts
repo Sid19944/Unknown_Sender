@@ -64,6 +64,10 @@ const UserSchema: Schema<User> = new Schema({
     default: false,
   },
   messages: [MessageSchema],
+  createdAt : {
+    type : Date,
+    default : new Date()
+  }
 });
 
 const UserModel =
