@@ -14,13 +14,13 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // if (!token) {
-  //   return NextResponse.redirect(new URL("/sign-up", request.url));
-  // }
+  if (!token && url.pathname.startsWith("/dashboard") ) {
+    return NextResponse.redirect(new URL("/sign-up", request.url));
+  }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ["/sign-in", "/sign-up"],
+  matcher: ["/sign-in", "/sign-up", "/dashboard/:path*"],
 };

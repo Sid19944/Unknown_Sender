@@ -3,14 +3,45 @@ import UserModel from "@/models/User";
 import bcrypt from "bcryptjs";
 
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
-import { success } from "zod";
-import { messageSchema } from "@/schemas/messageSchema";
-import { ApiResponse } from "@/types/ApiResponse";
+import { NextRequest } from "next/server";
 
-export async function POST(request: Request) {
+import { singUpSchema } from "@/schemas/singUpSchema";
+import z from "zod";
+
+export async function POST(req: NextRequest) {
   await dbConnect();
   try {
-    const { username, email, password } = await request.json();
+    const body = await req.json();
+    const { username, email, password } = body;
+    if (!username || !email || !password) {
+      return Response.json(
+        {
+          success: false,
+          messaage: "Please Provide all details",
+        },
+        { status: 400 },
+      );
+    }
+
+
+    // Zod schema validation
+    const checkSignUpSchema = singUpSchema.safeParse(body);
+    if (!checkSignUpSchema.success) {
+      const formatted = checkSignUpSchema.error.format();
+
+      const usernameErr = formatted.username?._errors?.[0];
+      const emailErr = formatted.email?._errors?.[0];
+      const passwordErr = formatted.password?._errors?.[0];
+
+      return Response.json(
+        {
+          success: false,
+          message: `${usernameErr ?? emailErr ?? passwordErr ?? "Invalid Input "}`,
+        },
+        { status: 400 },
+      );
+    }
+
     const userExistByUsername = await UserModel.findOne({
       username,
       isVerified: true,
@@ -48,7 +79,7 @@ export async function POST(request: Request) {
         userExistByEmail.verifyCodeExpiry = new Date(
           Date.now() + 60 * 60 * 1000,
         );
-        await userExistByEmail.save()
+        await userExistByEmail.save();
       }
     } else {
       const hashPass = await bcrypt.hash(password, 10);
