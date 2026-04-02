@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import { sendVerificationEmail } from "@/helpers/sendVerificationEmail";
 import { NextRequest } from "next/server";
 
-import { singUpSchema } from "@/schemas/singUpSchema";
+import { signUpSchema } from "@/schemas/signUpSchema";
 import z from "zod";
 
 export async function POST(req: NextRequest) {
@@ -23,9 +23,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-
     // Zod schema validation
-    const checkSignUpSchema = singUpSchema.safeParse(body);
+    const checkSignUpSchema = signUpSchema.safeParse(body);
     if (!checkSignUpSchema.success) {
       const formatted = checkSignUpSchema.error.format();
 
@@ -124,7 +123,7 @@ export async function POST(req: NextRequest) {
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error registring user", error);
+    console.error("Error registring user");
     return Response.json(
       {
         success: false,

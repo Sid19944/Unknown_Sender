@@ -9,7 +9,7 @@ export const usernameValidation = z
     "Username can't contain space, UPPERCACE & special character",
   );
 
-export const singUpSchema = z.object({
+export const signUpSchema = z.object({
   username: usernameValidation,
   email: z.string().email({ message: "Invalid Email Address" }),
   password: z
