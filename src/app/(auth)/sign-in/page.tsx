@@ -22,6 +22,7 @@ import { Input } from "@/components/ui/input";
 import { Loader } from "lucide-react";
 
 function page() {
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof signInSchema>>({
@@ -34,7 +35,11 @@ function page() {
   });
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
-    // TODO on Submit
+    setIsSubmitting(true);
+    try {
+      console.log(data);
+      const response = axios.post(`/sign-in`, data);
+    } catch (err) {}
   };
 
   return (
@@ -46,10 +51,68 @@ function page() {
           </h1>
           <p className="mb-4">Sign In to continue anoymous adventure</p>
         </div>
-      </div>
 
-      <div>
-        <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}></form>
+        <div>
+          <form id="sign-in-form" onSubmit={form.handleSubmit(onSubmit)}>
+            <FieldGroup>
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor="email">Email</FieldLabel>
+                    <div>
+                      <Input
+                        {...field}
+                        id="email"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Enter Email ID"
+                        autoComplete="off"
+                      />
+                    </div>
+                    {
+                      fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]}/>
+                      )
+                    }
+                  </Field>
+                )}
+              />
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field>
+                    <FieldLabel htmlFor="password">Password</FieldLabel>
+                    <div>
+                      <Input
+                        {...field}
+                        id="passwordemail"
+                        type="password"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Enter Password"
+                        autoComplete="off"
+                      />
+                    </div>
+                  </Field>
+                )}
+              />
+
+              <Button>SignIn</Button>
+            </FieldGroup>
+          </form>
+          <div>
+            <p>
+              Not a member?{" "}
+              <Link
+                href={`/sign-up`}
+                className="text-blue-400 hover:text-blue-600 hover:underline"
+              >
+                Sign Up
+              </Link>
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );

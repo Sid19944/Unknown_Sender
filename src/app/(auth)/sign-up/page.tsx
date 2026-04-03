@@ -19,7 +19,7 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Loader } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
 
 function page() {
   const [username, setUsername] = useState("");
@@ -52,15 +52,19 @@ function page() {
             `/api/check-username-unique?username=${debouncedUsername}`,
           );
           if (!response.data.success) {
+            console.log("A")
             toast.error(response.data.message);
           } else {
             toast.success(response.data.message);
           }
           setUsernameMessage(response.data.message);
         } catch (err) {
-          console.log("Error while checking the username unique", err);
+          console.log("Error while checking the username unique");
           const axiosErr = err as AxiosError<ApiResponse>;
           setUsernameMessage(
+            axiosErr.response?.data.message ?? "Error checking username",
+          );
+          toast.error(
             axiosErr.response?.data.message ?? "Error checking username",
           );
         } finally {
@@ -108,7 +112,7 @@ function page() {
         </div>
 
         <div>
-          <form id="form-rhf-demo" onSubmit={form.handleSubmit(onSubmit)}>
+          <form id="sign-up-form" onSubmit={form.handleSubmit(onSubmit)}>
             <FieldGroup>
               <Controller
                 name="username"
@@ -129,7 +133,7 @@ function page() {
                         }}
                       />
                       {isCheckingUsername && (
-                        <Loader className="animate-spin" />
+                        <Loader2 className="animate-spin" />
                       )}
                     </div>
                     {fieldState.invalid && (
