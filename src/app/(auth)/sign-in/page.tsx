@@ -46,10 +46,10 @@ function page() {
     console.log(result);
     if (result?.error) {
       toast.error(result.error);
-      setIsSubmitting(false)
+      setIsSubmitting(false);
       return;
     }
-    setIsSubmitting(false)
+    setIsSubmitting(false);
     toast.success("User Sign-In Successfully");
     router.replace("/dashboard");
   };
@@ -111,7 +111,8 @@ function page() {
                 )}
               />
 
-              <Button type="submit" className="cursor-pointer">
+              <Button type="submit" className="cursor-pointer"
+              disabled={isSubmitting}>
                 {isSubmitting ? (
                   <>
                     <Loader2 className="animate-spin" /> Please wait
