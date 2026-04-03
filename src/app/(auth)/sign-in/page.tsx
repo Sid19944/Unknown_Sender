@@ -19,7 +19,8 @@ import {
   FieldLabel,
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Loader } from "lucide-react";
+import { Loader, Loader2 } from "lucide-react";
+import { signIn } from "next-auth/react";
 
 function page() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,7 +28,7 @@ function page() {
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
-    mode: "onSubmit",
+    mode: "onChange",
     defaultValues: {
       email: "",
       password: "",
@@ -36,10 +37,21 @@ function page() {
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
     setIsSubmitting(true);
-    try {
-      console.log(data);
-      const response = axios.post(`/sign-in`, data);
-    } catch (err) {}
+    const result = await signIn("credentials", {
+      redirect: false,
+      email: data.email,
+      password: data.password,
+    });
+
+    console.log(result);
+    if (result?.error) {
+      toast.error(result.error);
+      setIsSubmitting(false)
+      return;
+    }
+    setIsSubmitting(false)
+    toast.success("User Sign-In Successfully");
+    router.replace("/dashboard");
   };
 
   return (
@@ -59,9 +71,9 @@ function page() {
                 name="email"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field>
+                  <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="email">Email</FieldLabel>
-                    <div>
+                    <div className="flex gap-2">
                       <Input
                         {...field}
                         id="email"
@@ -70,11 +82,9 @@ function page() {
                         autoComplete="off"
                       />
                     </div>
-                    {
-                      fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]}/>
-                      )
-                    }
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
                   </Field>
                 )}
               />
@@ -82,7 +92,7 @@ function page() {
                 name="password"
                 control={form.control}
                 render={({ field, fieldState }) => (
-                  <Field>
+                  <Field data-invalid={fieldState.invalid}>
                     <FieldLabel htmlFor="password">Password</FieldLabel>
                     <div>
                       <Input
@@ -94,11 +104,22 @@ function page() {
                         autoComplete="off"
                       />
                     </div>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
                   </Field>
                 )}
               />
 
-              <Button>SignIn</Button>
+              <Button type="submit" className="cursor-pointer">
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="animate-spin" /> Please wait
+                  </>
+                ) : (
+                  <>SignIn</>
+                )}
+              </Button>
             </FieldGroup>
           </form>
           <div>

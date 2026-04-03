@@ -73,11 +73,13 @@ export async function POST(req: NextRequest) {
         );
       } else {
         const hashPass = await bcrypt.hash(password, 10);
+        userExistByEmail.username = username;
         userExistByEmail.password = hashPass;
         userExistByEmail.verifyCode = verifyCode;
         userExistByEmail.verifyCodeExpiry = new Date(
-          Date.now() + 60 * 60 * 1000,
+          Date.now() + 5 * 60 * 1000,
         );
+
         await userExistByEmail.save();
       }
     } else {

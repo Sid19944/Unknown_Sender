@@ -32,7 +32,7 @@ function page() {
   // zob implementation
   const form = useForm<z.infer<typeof signUpSchema>>({
     resolver: zodResolver(signUpSchema),
-    mode: "onSubmit",
+    mode: "onChange",
     defaultValues: {
       username: "",
       email: "",
@@ -52,7 +52,6 @@ function page() {
             `/api/check-username-unique?username=${debouncedUsername}`,
           );
           if (!response.data.success) {
-            console.log("A")
             toast.error(response.data.message);
           } else {
             toast.success(response.data.message);
@@ -85,7 +84,7 @@ function page() {
       const response = await axios.post<ApiResponse>("/api/sign-up", data);
 
       toast.success(response.data.message);
-      router.replace(`/verify/${username}`);
+      router.replace(`/verify-code/${username}`);
       setIsSubmitting(false);
 
       form.reset({
@@ -106,7 +105,7 @@ function page() {
       <div className="w-full max-w-md p-8 spcae-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Join Mystry Message
+            Join Unknown Message
           </h1>
           <p className="mb-4">Sign up to start your anoymous adventure</p>
         </div>

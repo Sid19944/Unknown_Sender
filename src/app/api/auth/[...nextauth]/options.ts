@@ -17,13 +17,11 @@ export const authOptions: NextAuthOptions = {
         await dbConnect();
         try {
           const user = await UserModel.findOne({
-            $or: [
-              { email: credentials.identifier },
-              { username: credentials.indentifier },
-            ],
+            $or: [{ email: credentials.email }],
           });
+
           if (!user) {
-            throw new Error("No user found with this email");
+            throw new Error("No user found with this email ID");
           }
 
           if (!user.isVerified) {

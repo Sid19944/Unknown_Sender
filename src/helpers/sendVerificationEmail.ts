@@ -45,7 +45,7 @@ export async function sendVerificationEmail(
               ${verifiyCode}
             </div>
             <p style="color: #6B7280; font-size: 14px;">
-              Expires in 10 minutes. Do not share it.
+              Expires in 5 minutes. Do not share it.
             </p>
           </div>`,
       }),

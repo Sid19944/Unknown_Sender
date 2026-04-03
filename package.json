@@ -11,7 +11,6 @@
   "dependencies": {
     "@ai-sdk/groq": "^3.0.32",
     "@ai-sdk/react": "^3.0.144",
-    "@getbrevo/brevo": "^5.0.3",
     "@hookform/resolvers": "^5.2.2",
     "@uidotdev/usehooks": "^2.4.1",
     "ai": "^6.0.142",
@@ -21,6 +20,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "http-status-codes": "^2.3.0",
+    "input-otp": "^1.4.2",
     "lucide-react": "^1.7.0",
     "mongoose": "^9.3.1",
     "next": "16.2.1",
