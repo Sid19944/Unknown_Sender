@@ -56,7 +56,7 @@ function MessageCard({ message, onMessageDelete }: MessageCardProps) {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="font-semibold text-center">
-            Cart Title
+            {message?.content}
           </CardTitle>
         </CardHeader>
 
@@ -84,8 +84,6 @@ function MessageCard({ message, onMessageDelete }: MessageCardProps) {
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
-
-        <CardDescription>{message?.content}</CardDescription>
       </Card>
     </div>
   );

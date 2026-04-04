@@ -12,7 +12,7 @@ function navbar() {
     <nav className="w-full shadow-md p-3">
       <div className="mx-auto flex flex-col sm:flex-row justify-between items-center">
         <a href="#" className="text-xl font-bold mb-4 sm:mb-0">
-          Unknown Message
+          True Message's
         </a>
         {session ? (
           <>

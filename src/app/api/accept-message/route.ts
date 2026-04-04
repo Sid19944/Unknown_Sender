@@ -25,13 +25,14 @@ export async function POST(req: NextRequest) {
 
   const userId = user._id;
   const { acceptMessages } = await req.json();
-
   try {
     const updatedUser = await UserModel.findByIdAndUpdate(
       userId,
       { isAcceptingMessage: acceptMessages },
       { new: true },
     );
+
+    console.log(updatedUser)
 
     if (!updatedUser) {
       return NextResponse.json(
@@ -41,16 +42,15 @@ export async function POST(req: NextRequest) {
         },
         { status: 401 },
       );
-    } else {
-      return NextResponse.json(
-        {
-          success: true,
-          message: "Message acceptance status updated successfully",
-          updatedUser,
-        },
-        { status: 200 },
-      );
     }
+    return NextResponse.json(
+      {
+        success: true,
+        message: "Message acceptance status updated successfully",
+        updatedUser,
+      },
+      { status: 200 },
+    );
   } catch (err) {
     console.log("Failed to update user status to accept message");
     return NextResponse.json(
@@ -97,7 +97,6 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(
       {
         success: true,
-        message: "Is User accepting message",
         isAcceptingMessages: foundUser.isAcceptingMessage,
       },
       { status: 200 },
