@@ -123,7 +123,7 @@ function page() {
             disabled
             className="input input-bordered w-full p-2 mr-2"
           />
-          <Button onClick={copyToClipboard}>Copy</Button>
+          <Button onClick={copyToClipboard} className="cursor-pointer">Copy</Button>
         </div>
       </div>
 
@@ -133,6 +133,7 @@ function page() {
           checked={acceptMessages}
           onCheckedChange={handleSwitchChange}
           disabled={isSwitchLoading}
+          className="cursor-pointer"
         />
         <span className="ml-2">
           Accept Messages: {acceptMessages ? "On" : "Off"}
@@ -141,7 +142,7 @@ function page() {
       <Separator />
 
       <Button
-        className="mt-4"
+        className="mt-4 cursor-pointer"
         variant="outline"
         onClick={(e) => {
           e.preventDefault();

@@ -55,35 +55,39 @@ function MessageCard({ message, onMessageDelete }: MessageCardProps) {
     <div>
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="font-semibold text-center">
-            {message?.content}
-          </CardTitle>
+          <div className="flex justify-between items-center">
+            <CardTitle className="font-semibold text-center text-xl">
+              {message?.content}
+            </CardTitle>
+
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive" className="cursor-pointer">
+                  <X className="w-5 h-5" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    your Message from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleDeleteConfirm} className="cursor-pointer">
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
         </CardHeader>
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive" className="cursor-pointer">
-              <X className="w-5 h-5" /> Delete
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                Message from our servers.
-                <br />
-                {message?._id.toString()}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleDeleteConfirm}>
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
+        <CardDescription className="pl-2">
+          {new Date(message.createdAt).toLocaleString("en-In")}
+        </CardDescription>
       </Card>
     </div>
   );
