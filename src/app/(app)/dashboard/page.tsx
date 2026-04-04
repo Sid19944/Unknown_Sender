@@ -21,6 +21,7 @@ function page() {
   const [isSwitchLoading, setIsWwitchLoading] = useState(false);
 
   const handleDeleteMessage = (messageId: string) => {
+    console.log("F",messageId)
     setMessages(
       messages.filter((message) => message._id.toString() !== messageId),
     );
@@ -111,7 +112,7 @@ function page() {
   };
 
   return (
-    <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
+    <div className="flex-1 p-6 bg-gray-800 text-white w-full ">
       <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
       <div className="mb-4">
@@ -142,7 +143,7 @@ function page() {
       <Separator />
 
       <Button
-        className="mt-4 cursor-pointer"
+        className="mt-4 cursor-pointer text-black"
         variant="outline"
         onClick={(e) => {
           e.preventDefault();
@@ -155,7 +156,7 @@ function page() {
           <RefreshCcw className="h-4 w-4" />
         )}
       </Button>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {messages.length > 0 ? (
           messages.map((message, index) => (
             <MessageCard

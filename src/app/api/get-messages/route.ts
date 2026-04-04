@@ -35,7 +35,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json(
         {
           success: false,
-          message: "User not found",
+          message: "User don't have any messages yet!!",
         },
         { status: 401 },
       );

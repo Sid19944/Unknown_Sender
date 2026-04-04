@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { X } from "lucide-react";
 import { Message } from "@/models/User";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { ApiResponse } from "@/types/ApiResponse";
 
 type MessageCardProps = {
@@ -38,17 +38,23 @@ type MessageCardProps = {
 
 function MessageCard({ message, onMessageDelete }: MessageCardProps) {
   const handleDeleteConfirm = async () => {
-    const response = await axios.delete<ApiResponse>(
-      `/api/delete-message/${message._id}`,
-    );
+    try {
+      const response = await axios.delete<ApiResponse>(
+        `/api/delete-message/${message._id}`,
+      );
 
-    if (!response?.data?.success) {
-      toast.error(response.data.message);
-    } else {
-      toast.success(response.data.message);
+      if (!response.data.success) {
+        toast.error(response.data.message);
+      } else {
+        toast.success(response.data.message);
+      }
+      onMessageDelete(message._id.toString());
+    } catch (error) {
+      const axiosErr = error as AxiosError<ApiResponse>;
+      const errorMessage =
+        axiosErr.response?.data.message || "Error while deleting the message";
+      toast.error(errorMessage)
     }
-
-    onMessageDelete(message._id.toString());
   };
 
   return (
@@ -75,8 +81,13 @@ function MessageCard({ message, onMessageDelete }: MessageCardProps) {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={handleDeleteConfirm} className="cursor-pointer">
+                  <AlertDialogCancel className="cursor-pointer">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    onClick={handleDeleteConfirm}
+                    className="cursor-pointer"
+                  >
                     Delete
                   </AlertDialogAction>
                 </AlertDialogFooter>

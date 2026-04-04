@@ -1,13 +1,31 @@
 import dbConnect from "@/lib/dbConnect";
 import UserModel from "@/models/User";
+import mongoose from "mongoose";
+import { getServerSession, User } from "next-auth";
 import { NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/options";
 
-export async function DELETE(req: Request) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: Promise<{ messageId: string }> },
+) {
   await dbConnect();
 
-  try {
-    const { username, messageId } = await req.json();
+  const session = await getServerSession(authOptions);
+  const user: User = session?.user as User;
 
+  if (!session || !session.user) {
+    return NextResponse.json(
+      {
+        success: false,
+        message: "Not Authenticated",
+      },
+      { status: 401 },
+    );
+  }
+  const { messageId } = await params;
+
+  try {
     if (!messageId) {
       return NextResponse.json(
         {
@@ -18,13 +36,12 @@ export async function DELETE(req: Request) {
       );
     }
 
-    const deleteMessage = await UserModel.findOneAndUpdate(
-      { username },
+    const deleteMessage = await UserModel.findByIdAndUpdate(
+      { _id: user._id },
       {
-        $pull: { messages: { _id: messageId } },
+        $pull: { messages: { _id: new mongoose.Types.ObjectId(messageId) } },
       },
     );
-    console.log(deleteMessage);
 
     if (!deleteMessage) {
       return NextResponse.json(
@@ -44,7 +61,6 @@ export async function DELETE(req: Request) {
       { status: 200 },
     );
   } catch (err) {
-    console.log(err);
     return NextResponse.json(
       {
         success: false,

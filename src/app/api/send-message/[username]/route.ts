@@ -3,11 +3,15 @@ import UserModel from "@/models/User";
 import { Message } from "@/models/User";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function POST(req: NextRequest) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: Promise<{ username: string }> },
+) {
   await dbConnect();
 
   const body = await req.json();
-  const { username, content } = body;
+  const { content } = body;
+  const { username } = await params;
 
   try {
     const user = await UserModel.findOne({ username });
@@ -37,26 +41,25 @@ export async function POST(req: NextRequest) {
       createdAt: new Date(),
     };
 
-    user.messages.push(newMessage as Message)
+    user.messages.push(newMessage as Message);
 
-    await user.save()
+    await user.save();
 
     return NextResponse.json(
-        {
-          success: true,
-          message: "Message send successfully",
-        },
-        { status: 200 },
-      );
-
+      {
+        success: true,
+        message: "Message send successfully",
+      },
+      { status: 200 },
+    );
   } catch (error) {
-    console.log("error while send-message",error)
+    console.log("error while send-message", error);
     return NextResponse.json(
-        {
-          success: true,
-          message: "Failed to send message",
-        },
-        { status: 500 },
-      );
+      {
+        success: true,
+        message: "Failed to send message",
+      },
+      { status: 500 },
+    );
   }
 }

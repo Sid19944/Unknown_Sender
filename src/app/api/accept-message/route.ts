@@ -32,8 +32,6 @@ export async function POST(req: NextRequest) {
       { new: true },
     );
 
-    console.log(updatedUser)
-
     if (!updatedUser) {
       return NextResponse.json(
         {
