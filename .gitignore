@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+src/app/api/test/
+src/lib/ErrorHandler.ts
+src/lib/errorMiddleware.ts
+src/lib/asyncWrap.ts
