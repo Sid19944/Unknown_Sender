@@ -31,7 +31,7 @@ function navbar() {
                   href="/dashboard"
                   className="w-1/2 sm:w-auto cursor-pointer"
                 >
-                  <Button>Dashboard</Button>
+                  <Button className="cursor-pointer">Dashboard</Button>
                 </Link>
               )}
             </div>
@@ -39,7 +39,7 @@ function navbar() {
         ) : (
           <>
             <Link href="/sign-in" className="w-full sm:w-auto cursor-pointer">
-              <Button>Login</Button>
+              <Button className="cursor-pointer">Login</Button>
             </Link>
           </>
         )}

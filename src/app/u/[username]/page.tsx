@@ -26,8 +26,9 @@ import { Loader2 } from "lucide-react";
 import axios, { AxiosError } from "axios";
 import { toast } from "sonner";
 import { ApiResponse } from "@/types/ApiResponse";
-import { useCompletion } from "@ai-sdk/react";
 import { Separator } from "@/components/ui/separator";
+import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
+import Footer from "@/components/Footer";
 
 function route() {
   const params = useParams<{ username: string }>();
@@ -47,7 +48,22 @@ function route() {
     },
   });
 
-  const onSubmit = async () => {};
+  const onSubmit = async (data: z.infer<typeof sendMessageSchema>) => {
+    try {
+      const response = await axios.post<ApiResponse>(
+        `/api/send-message/${params.username}`,
+        {
+          content: data.message,
+        },
+      );
+      toast.success(response?.data.message);
+    } catch (err) {
+      const axiosErr = err as AxiosError<ApiResponse>;
+      const errMessage =
+        axiosErr.response?.data.message ?? "Error while sending message";
+      toast.error(errMessage);
+    }
+  };
 
   const suggestMessages = async () => {
     setIsThinking(true);
@@ -68,20 +84,20 @@ function route() {
   const message = form.watch("message");
 
   const selectMessage = (qus: string) => {
-    form.setValue("message", qus);
+    form.setValue("message", qus, { shouldValidate: true });
   };
 
   return (
-    <div className="flex justify-center items-center flex-col">
+    <div className="flex justify-center items-center flex-col h-screen">
       <nav className="w-full flex shadow-md justify-around p-2">
         <h1 className="text-xl font-semibold">True Message's</h1>
         <div className="gap-2 flex">
           <Link href="/">
-            <Button>Home</Button>
+            <Button className="cursor-pointer">Home</Button>
           </Link>
           {session?.user ? (
             <Link href="/dashboard">
-              <Button>Dashboard</Button>
+              <Button className="cursor-pointer">Dashboard</Button>
             </Link>
           ) : (
             <></>
@@ -134,6 +150,7 @@ function route() {
               variant="default"
               size="sm"
               className="cursor-pointer"
+              type="submit"
             >
               Send It
             </InputGroupButton>
@@ -153,7 +170,9 @@ function route() {
                 <Loader2 className="animate-spin" /> Thinking...
               </>
             ) : (
-              <>Suggest Messages</>
+              <>
+                <AutoFixHighIcon /> Suggest Messages
+              </>
             )}
           </Button>
           <div className="flex justify-center border rounded-lg">
@@ -176,6 +195,9 @@ function route() {
             </div>
           </div>
         </div>
+      </div>
+      <div className="mt-auto w-full">
+        <Footer />
       </div>
     </div>
   );
