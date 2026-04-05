@@ -17,7 +17,7 @@ export async function POST(req: NextRequest) {
   try {
     const result = await streamText({
       model: groq("llama-3.1-8b-instant"),
-      prompt: "Generate three questions",
+      prompt: "Generate three questions, each under 100 characters",
       system: SYSTEM_PROMT,
     });
 
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     return Response.json(
       {
         success: false,
-        message: "Failed to generate Questions",
+        message: "AI Failed Generate Questions",
       },
       { status: 500 },
     );

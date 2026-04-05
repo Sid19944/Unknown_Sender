@@ -37,26 +37,6 @@ type MessageCardProps = {
 };
 
 function MessageCard({ message, onMessageDelete }: MessageCardProps) {
-  const handleDeleteConfirm = async () => {
-    try {
-      const response = await axios.delete<ApiResponse>(
-        `/api/delete-message/${message._id}`,
-      );
-
-      if (!response.data.success) {
-        toast.error(response.data.message);
-      } else {
-        toast.success(response.data.message);
-      }
-      onMessageDelete(message._id.toString());
-    } catch (error) {
-      const axiosErr = error as AxiosError<ApiResponse>;
-      const errorMessage =
-        axiosErr.response?.data.message || "Error while deleting the message";
-      toast.error(errorMessage)
-    }
-  };
-
   return (
     <div>
       <Card className="w-full max-w-sm">
@@ -85,7 +65,7 @@ function MessageCard({ message, onMessageDelete }: MessageCardProps) {
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
-                    onClick={handleDeleteConfirm}
+                    onClick={() => onMessageDelete(message._id.toString())}
                     className="cursor-pointer"
                   >
                     Delete

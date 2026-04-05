@@ -20,11 +20,27 @@ function page() {
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsWwitchLoading] = useState(false);
 
-  const handleDeleteMessage = (messageId: string) => {
-    console.log("F",messageId)
+  const handleDeleteMessage = async (messageId: string) => {
     setMessages(
       messages.filter((message) => message._id.toString() !== messageId),
     );
+
+    try {
+      const response = await axios.delete<ApiResponse>(
+        `/api/delete-message/${messageId}`,
+      );
+
+      if (!response.data.success) {
+        toast.error(response.data.message);
+      } else {
+        toast.success(response.data.message);
+      }
+    } catch (error) {
+      const axiosErr = error as AxiosError<ApiResponse>;
+      const errorMessage =
+        axiosErr.response?.data.message || "Error while deleting the message";
+      toast.error(errorMessage);
+    }
   };
 
   const { data: session } = useSession();
@@ -103,7 +119,10 @@ function page() {
     var { username } = session?.user as User;
   }
 
-  const baseUrl = `${window.location.protocol}//${window.location.host}`;
+  const baseUrl =
+    typeof window !== "undefined"
+      ? `${window.location.protocol}//${window.location.host}`
+      : "";
   const profileUrl = `${baseUrl}/u/${username}`;
 
   const copyToClipboard = () => {
@@ -124,13 +143,16 @@ function page() {
             disabled
             className="input input-bordered w-full p-2 mr-2"
           />
-          <Button onClick={copyToClipboard} className="cursor-pointer">Copy</Button>
+          <Button onClick={copyToClipboard} className="cursor-pointer">
+            Copy
+          </Button>
         </div>
       </div>
 
       <div className="mb-4">
         <Switch
           {...register("acceptMessage")}
+          id="accept-message"
           checked={acceptMessages}
           onCheckedChange={handleSwitchChange}
           disabled={isSwitchLoading}

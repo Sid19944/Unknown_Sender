@@ -7,7 +7,8 @@ import { Button } from "./ui/button";
 function navbar() {
   const { data: session } = useSession();
   const user = session?.user as User;
-  const url = window.location.pathname;
+
+  const url = typeof window !== "undefined" ? window.location.pathname : "";
 
   return (
     <nav className="w-full shadow-md p-3 sticky top-0 bg-white">
