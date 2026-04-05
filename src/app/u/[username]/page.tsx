@@ -29,6 +29,7 @@ import { ApiResponse } from "@/types/ApiResponse";
 import { Separator } from "@/components/ui/separator";
 import AutoFixHighIcon from "@mui/icons-material/AutoFixHigh";
 import Footer from "@/components/Footer";
+import SendIcon from "@mui/icons-material/Send";
 
 function route() {
   const params = useParams<{ username: string }>();
@@ -49,6 +50,7 @@ function route() {
   });
 
   const onSubmit = async (data: z.infer<typeof sendMessageSchema>) => {
+    setIsSubmitting(true);
     try {
       const response = await axios.post<ApiResponse>(
         `/api/send-message/${params.username}`,
@@ -62,6 +64,8 @@ function route() {
       const errMessage =
         axiosErr.response?.data.message ?? "Error while sending message";
       toast.error(errMessage);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -152,7 +156,17 @@ function route() {
               className="cursor-pointer"
               type="submit"
             >
-              Send It
+              {isSubmitting ? (
+                <>
+                  <Loader2 className="animate-spin" />
+                  Please Wait...
+                </>
+              ) : (
+                <>
+                  <SendIcon />
+                  Send It
+                </>
+              )}
             </InputGroupButton>
           </FieldGroup>
         </form>
