@@ -28,7 +28,7 @@ Unknown Sender is a full-stack web application that lets anyone send anonymous m
 | Styling | Tailwind CSS |
 | Database | MongoDB + Mongoose |
 | Auth | NextAuth.js |
-| Email | Resend / Nodemailer |
+| Email | brevo |
 | AI | Groq (Llama 3.1 8b) |
 | Validation | Zod + React Hook Form |
 | Deployment | Vercel |
